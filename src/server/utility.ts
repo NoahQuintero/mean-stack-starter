@@ -3,6 +3,8 @@ import * as cluster from 'cluster';
 import { Message, MessageType } from './classes';
 
 export class Utility {
+
+    // switch statement for handling interprocess messages.
     public static setMessageHandling(w: Worker) {
         w.on('message', (message: Message) => {
 
@@ -30,6 +32,7 @@ export class Utility {
         return {wid: w.id, pid: w.process.pid};
     }
 
+    // get a summary of all the workers that are running right now
     public static requestWorkersHandler(w: Worker, message: Message) {
         let wid;
         const workers = [];
@@ -45,11 +48,14 @@ export class Utility {
         w.send(response);
     }
 
+    // handler for requesting shutdown
+    // don't remember how this works.
     public static requestShutdownHandler(w: Worker, message: Message) {
         const pid = message.data;
         let wid;
         let workerToKill: Worker;
 
+        // find the worker to kill
         for (wid in cluster.workers) {
             // console.log(cluster.workers[wid].process.pid, pid);
             if (cluster.workers[wid].process.pid === pid) {

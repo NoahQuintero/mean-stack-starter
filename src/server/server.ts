@@ -16,6 +16,7 @@ if (cluster.isMaster) {
 
   console.log(`${cpus} cpus available`);
 
+  // fork a process for each available core
   let i;
   for (i = 0; i < cpus; i++) {
     console.log(`Forking worker ${i}`);
@@ -23,6 +24,7 @@ if (cluster.isMaster) {
     Utility.setMessageHandling(w);
   }
 
+  // create new process for each that dies.
   cluster.on('exit', function(worker, code, signal) {
       console.log('Worker ' + worker.process.pid + ' died with code: ' + code + ', and signal: ' + signal);
       console.log('Starting a new worker');
@@ -32,6 +34,7 @@ if (cluster.isMaster) {
 
 } else {
 
+  // if I'm a child, kill myself if asked to shutdown
   process.on('message', (message: Message) => {
     if (message.code === MessageType.SHUTDOWN) {
       console.log(`Process ${process.pid} shutting down`);
@@ -46,6 +49,7 @@ if (cluster.isMaster) {
 
   const dir = path.resolve(__dirname, '../client');
 
+  // use any extra modules/routes...
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json())
   app.use(express.static(dir));
