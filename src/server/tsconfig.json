@@ -1,8 +1,8 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "extends": "../../tsconfig.json",
     "outDir": "./dist",
-    "rootDir": "./src",
     "sourceMap": false,
     "declaration": false,
     "moduleResolution": "node",
